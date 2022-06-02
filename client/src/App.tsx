@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import  './styles/index.scss';
+import SearchComponent from './components/Search/SearchComponent';
+import Characters from "./components/CharactersList/Characters";
+import Header from "./components/Header/Header";
 
 function App() {
   const [characters, setCharacters] = useState<any>()
@@ -20,15 +22,9 @@ function App() {
   }
   return (
     <div className={"app"}>
-        <div >
-            <FavoriteIcon />
-        </div>
-
-        {characters && characters.map((character: any) => {
-            return (
-                <div key={character.id}>{character.name}</div>
-            )
-        })}
+        <Header/>
+        <SearchComponent/>
+        <Characters/>
     </div>
   );
 }
