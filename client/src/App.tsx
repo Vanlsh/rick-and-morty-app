@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import  './styles/index.scss';
 
 function App() {
+  const [characters, setCharacters] = useState<any>()
+    useEffect(() => {
+        getCharacter()
+        console.log(characters)
+    }, [])
+    useEffect(() => {
+        console.log(characters)
+    },[characters])
+  const getCharacter = () => {
+    fetch("https://rickandmortyapi.com/api/character")
+        .then(res => res.json())
+        .then(result => {
+          setCharacters(result.results)
+        })
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={"app"}>
+        <div >
+            <FavoriteIcon />
+        </div>
+
+        {characters && characters.map((character: any) => {
+            return (
+                <div key={character.id}>{character.name}</div>
+            )
+        })}
     </div>
   );
 }
