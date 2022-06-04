@@ -20,6 +20,14 @@ export const characterSlice = createSlice({
         },
         setDetailsId(state, action: PayloadAction<number | null>) {
             state.detailsId = action.payload
+        },
+        setLike(state, action: PayloadAction<number | null>){
+            state.character.forEach(item => {
+                if(item.id === action.payload){
+                    item.like = !item.like
+
+                }
+            })
         }
     }
 })

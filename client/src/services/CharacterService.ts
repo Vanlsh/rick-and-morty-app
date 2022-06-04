@@ -11,7 +11,7 @@ interface IResult{
     status: string
     created: string
     like: boolean
-    img: string | null
+    image: string | null
     episode: string []
 }
 
@@ -42,15 +42,16 @@ export const characterAPI = createApi({
                 url: `/location/${id}`,
             })
         }),
-        fetchEpisode:  build.query<any,number>({
-            query: (id) => ({
-                url: `/location${id}`,
+        fetchEpisode:  build.query<any, number []>({
+            query: (arrayOfId) => ({
+
+                url: `/episode/${arrayOfId}`,
             })
         }),
-        fetch: build.query<CharacterModel,number | null>({
-            query: (id) => ({
-                url: `/character/${id}`,
-            })
-        }),
+        // fetch: build.query<CharacterModel,number | null>({
+        //     query: (id) => ({
+        //         url: `/character/${id}`,
+        //     })
+        // }),
     })
 })

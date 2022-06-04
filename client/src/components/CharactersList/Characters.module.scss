@@ -31,7 +31,10 @@
     align-items: center;
     .liked {
       margin: 0 20px;
-      fill:red;
+      svg{
+        fill:red;
+      }
+
     }
     .unliked {
       margin: 0 20px;

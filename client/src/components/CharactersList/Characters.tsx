@@ -25,14 +25,13 @@ const Characters = () => {
         if(characters) {
             let itemsOfCharacter: CharacterModel[] = []
             for(let i = 0; i < characters.results.length; i++) {
-                const {id, name, species, gender,location,episode, status, created} = characters.results[i]
+                const {id, name, species, gender,location,episode, status, created, image} = characters.results[i]
                 const episodes = getEpisode(episode)
                 const item: CharacterModel = {
-                    id, name, species,gender,location,status, episodes, created, img: null, like: false
+                    id, name, species,gender,location,status, episodes, created, image, like: false
                 }
                 itemsOfCharacter.push(item)
             }
-            console.log(itemsOfCharacter)
             dispatch(setCharacter(itemsOfCharacter))
         }
     },[characters])
