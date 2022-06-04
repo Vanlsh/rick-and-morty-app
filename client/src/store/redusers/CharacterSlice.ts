@@ -1,20 +1,27 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {CharacterModel} from "../../services/Character";
 
 
 interface CharacterState {
-    
-    liked: boolean
+    character: CharacterModel[]
+    detailsId: number | null
 }
 
 const initialState: CharacterState = {
-    liked: true,
+    character: [],
+    detailsId: null
 }
-export const noteSlice = createSlice({
+export const characterSlice = createSlice({
     name: 'character',
     initialState,
     reducers: {
-
+        setCharacter(state, action: PayloadAction<CharacterModel[]>){
+            state.character = action.payload
+        },
+        setDetailsId(state, action: PayloadAction<number | null>) {
+            state.detailsId = action.payload
+        }
     }
 })
 
-export default noteSlice.reducer;
+export default characterSlice.reducer;
