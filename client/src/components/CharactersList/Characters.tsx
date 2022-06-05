@@ -1,41 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import {characterAPI} from '../../services/CharacterService'
-import characterReducer, {characterSlice} from "../../store/redusers/CharacterSlice";
-import {CharacterModel} from "../../services/Character";
-import PaginationComponent from './PaginationComponent/PaginationComponent';
+import {characterSlice} from "../../store/redusers/CharacterSlice";
+import {Button} from "@mui/material";
 import Character from "./Character";
-import s from './Characters.module.scss'
 import Details from "./Details/Details";
+import s from './Characters.module.scss'
 
-const getEpisode = (itemsOfEpisode: string []) : number []=> {
-    const episodeArrayNumber = itemsOfEpisode.map(value => {
-        const splitValue = value.split('/')
-        return Number(splitValue[splitValue.length - 1])
-    })
-    return episodeArrayNumber
-}
 const Characters = () => {
     const dispatch = useAppDispatch()
-    const {setCharacter} = characterSlice.actions
-    const {character,detailsId} = useAppSelector(state => state.characterReducer)
-    const {data: characters} = characterAPI.useFetchAllCharactersQuery("")
+    const {setPage} = characterSlice.actions
+    const {
+        character,
+        detailsId,
+        page,
+        maxPage,
+        isError,
+    } = useAppSelector(state => state.characterReducer)
 
-    useEffect(() => {
-        if(characters) {
-            let itemsOfCharacter: CharacterModel[] = []
-            for(let i = 0; i < characters.results.length; i++) {
-                const {id, name, species, gender,location,episode, status, created, image} = characters.results[i]
-                const episodes = getEpisode(episode)
-                const item: CharacterModel = {
-                    id, name, species,gender,location,status, episodes, created, image, like: false
-                }
-                itemsOfCharacter.push(item)
-            }
-            dispatch(setCharacter(itemsOfCharacter))
+    const addPage = () => {
+        if(page < maxPage){
+            dispatch(setPage(page + 1))
         }
-    },[characters])
-
+    }
     return (
         <div className={s.container}>
             {
@@ -43,17 +29,28 @@ const Characters = () => {
                     ?
                     (<Details id={detailsId}/>)
                     :
-                    (character && character.map((item: any) => (
-                        <Character
-                            key={item.id}
-                            character={item}
-                        />
-                    ))
-                )
+                    isError ? (
+                        <div>Character not found</div>
+
+                    ) : (
+                        (character && character.map((item: any) => {
+                                return (
+                                    <Character
+                                        key={item.id}
+                                        character={item}
+                                    />
+                                )
+                        })
+                        )
+                    )
+
             }
-            {
-                (!detailsId && character) && <PaginationComponent/>
-            }
+            {(!detailsId && character && maxPage > page) &&(
+                <div className={s.next__button}>
+                    <Button onClick={addPage} variant="contained">Next</Button>
+                </div>
+
+            )}
       </div>
     );
 };

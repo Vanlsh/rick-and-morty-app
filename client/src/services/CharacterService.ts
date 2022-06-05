@@ -1,5 +1,4 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {CharacterModel} from "./Character";
 interface IResult{
     id: number
     name: string
@@ -14,7 +13,10 @@ interface IResult{
     image: string | null
     episode: string []
 }
-
+interface IReq {
+    name: string
+    page: number
+}
 interface IResponse {
     info: {
         count: number
@@ -31,11 +33,16 @@ export const characterAPI = createApi({
     }),
     tagTypes: ["Character"],
     endpoints: (build) => ({
-        fetchAllCharacters: build.query<IResponse,string>({
-            query: () => ({
-                url: '/character',
+        fetchAllCharacters: build.query<IResponse,number>({
+            query: (page) => ({
+                url: `/character/?page=${page}`,
             }),
             providesTags: result => ["Character"]
+        }),
+        filterByName:  build.query<any,IReq>({
+            query: ({name, page}) => ({
+                url: `/character/?name=${name}&page=${page}`,
+            })
         }),
         fetchLocation:  build.query<any,number>({
             query: (id) => ({
