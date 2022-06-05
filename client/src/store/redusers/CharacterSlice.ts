@@ -8,6 +8,7 @@ interface CharacterState {
     page: number
     maxPage: number
     isError: boolean
+    name: string
 }
 
 const initialState: CharacterState = {
@@ -16,6 +17,7 @@ const initialState: CharacterState = {
     page: 1,
     maxPage: 2,
     isError: false,
+    name: ''
 }
 export const characterSlice = createSlice({
     name: 'character',
@@ -36,7 +38,6 @@ export const characterSlice = createSlice({
             })
         },
         setPage(state, action: PayloadAction<number>){
-            console.log(action.payload)
             state.page = action.payload
         },
         refreshCharacter(state){
@@ -47,6 +48,9 @@ export const characterSlice = createSlice({
         },
         setError(state, action: PayloadAction<boolean>){
             state.isError = action.payload
+        },
+        setName(state, action: PayloadAction<string>){
+            state.name = action.payload
         },
     }
 })

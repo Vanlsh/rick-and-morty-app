@@ -1,18 +1,20 @@
 import React from 'react';
 import  './styles/index.scss';
-import SearchComponent from './components/Search/SearchComponent';
-import Characters from "./components/CharactersList/Characters";
 import Header from "./components/Header/Header";
 import {Route, Routes } from 'react-router-dom';
+import {userAPI} from "./services/UserService";
+import Login from "./components/Login/Login";
+import MainPage from "./components/MainPage/MainPage";
+
 
 function App() {
+    const {data} = userAPI.useFetchUserQuery('')
   return (
     <div className={"app"}>
         <Header/>
-        <SearchComponent/>
         <Routes>
-            <Route path="/" element={<Characters/>}/>
-            <Route path="*" element={<Characters/>}/>
+            <Route path="/" element={<MainPage/>}/>
+            <Route path="/login" element={<Login/>}/>
         </Routes>
     </div>
   );

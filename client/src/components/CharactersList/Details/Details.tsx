@@ -1,5 +1,5 @@
 import {Card, CardContent, CardMedia,Typography} from '@mui/material';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useAppSelector} from "../../../hooks/redux";
 import {characterAPI} from "../../../services/CharacterService";
 import s from "./Details.module.scss"
@@ -29,9 +29,6 @@ const Details = ({id}: Props) => {
         }
         return episodeString
     }
-    useEffect(() => {
-        console.log(episodes)
-    }, [episodes])
     return (
         <div className={s.container}>
             <Card sx={{ maxWidth: 1000 }}>

@@ -1,21 +1,24 @@
 import {Card} from '@mui/material';
-import React, {useEffect} from 'react';
+import React from 'react';
 import s from './Characters.module.scss'
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {characterSlice} from "../../store/redusers/CharacterSlice";
 import {CharacterModel} from "../../services/Character";
+import {Link} from "react-router-dom";
 
 interface Props {
     character: CharacterModel
 }
 const Character = ({character}:Props) => {
     const dispatch = useAppDispatch()
-    const {setDetailsId,setLike} = characterSlice.actions
-
+    const {setDetailsId,setLike,setName} = characterSlice.actions
+    const user = false
     const clickLike = (e:any, id: number) => {
         e.stopPropagation()
-        dispatch(setLike(id))
+        if(user){
+            dispatch(setLike(id))
+        }
     }
     const card = (
         <div className={s.wrapper}>
@@ -24,11 +27,24 @@ const Character = ({character}:Props) => {
                 <div className={s.status}>{character.status}</div>
             </div>
             <div className={s.wrapper__buttons}>
-                <div className={character.like ? s.liked : s.unliked}
-                     onClick={(e:any) => clickLike(e, character.id) }
-                >
-                    <FavoriteIcon />
-                </div>
+                {
+                    user ?(
+                            <div className={character.like ? s.liked : s.unliked}
+                                 onClick={(e:any) => clickLike(e, character.id) }
+                            >
+                                <FavoriteIcon />
+                            </div>
+                        )
+                        :(
+                            <Link to={'/login'} >
+                                <div className={s.unliked}
+                                     onClick={(e) => e.stopPropagation()}>
+                                    <FavoriteIcon />
+                                </div>
+                            </Link>
+                        )
+                }
+
             </div>
         </div>
     );

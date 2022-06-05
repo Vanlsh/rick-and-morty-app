@@ -55,10 +55,5 @@ export const characterAPI = createApi({
                 url: `/episode/${arrayOfId}`,
             })
         }),
-        // fetch: build.query<CharacterModel,number | null>({
-        //     query: (id) => ({
-        //         url: `/character/${id}`,
-        //     })
-        // }),
     })
 })

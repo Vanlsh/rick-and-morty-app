@@ -10,8 +10,8 @@
   }
   .home {
     cursor: pointer;
-    &:hover{
-      background-color: white;
+    svg {
+      fill: black;
     }
   }
 }

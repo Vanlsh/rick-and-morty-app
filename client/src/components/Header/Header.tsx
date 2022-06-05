@@ -1,22 +1,28 @@
 import React from 'react';
 import s from './Header.module.scss'
 import {SvgIcon, SvgIconProps} from "@mui/material";
-import {useAppDispatch} from "../../hooks/redux";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {characterSlice} from "../../store/redusers/CharacterSlice";
+import { Link } from "react-router-dom";
 
 const Header = (props: SvgIconProps) => {
-
     const dispatch = useAppDispatch()
     const {setDetailsId} = characterSlice.actions
-
+    const {detailsId} = useAppSelector(state => state.characterReducer)
+    const backMain = () => {
+        dispatch(setDetailsId(null))
+    }
     return (
         <div className={s.wrapper}>
             <div className={s.name}>Rick & Morty</div>
-            <div className={s.home} onClick={() => dispatch(setDetailsId(null))}>
-                <SvgIcon {...props}>
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                </SvgIcon>
-            </div>
+            <Link to={'/'}>
+                <div className={s.home} onClick={backMain}>
+                    <SvgIcon {...props}>
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </SvgIcon>
+                </div>
+            </Link>
+
         </div>
     );
 };
