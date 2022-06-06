@@ -1,13 +1,12 @@
 import React from 'react';
 import s from './Header.module.scss'
 import {SvgIcon, SvgIconProps} from "@mui/material";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux";
+import {useAppDispatch} from "../../hooks/redux";
 import {characterSlice} from "../../store/redusers/CharacterSlice";
 
 const Header = (props: SvgIconProps) => {
     const dispatch = useAppDispatch()
     const {setDetailsId} = characterSlice.actions
-    const {detailsId} = useAppSelector(state => state.characterReducer)
     const backMain = () => {
         dispatch(setDetailsId(null))
     }

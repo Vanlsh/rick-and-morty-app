@@ -11,7 +11,7 @@ import {CharacterModel} from "../../services/Character";
 const Characters = () => {
     const dispatch = useAppDispatch()
     const {setPage} = characterSlice.actions
-    const [currentPageOfLike, setCurrentPageOfLike] = useState<number>(1)
+
     const {
         character,
         detailsId,
@@ -20,32 +20,10 @@ const Characters = () => {
         isError,
         likedCharacters
     } = useAppSelector(state => state.characterReducer)
-    useEffect(() => {
-        console.log("page ---- " + page)
-    },[page])
-    useEffect(() => {
-        let countLike: number = 0
-        if(likedCharacters){
-            for(let i = 0; i < character.length; i++){
-                if(CharacterHelper.getStorageLikeStatus(character[i].id)){
-                    countLike++
-                }
-            }
-            if(countLike/currentPageOfLike < 20 && page < maxPage){
-                console.log(page)
-                console.log(currentPageOfLike)
-            }
-        }
-        console.log(countLike)
-    },[likedCharacters,page])
+
     const addPage = () => {
         if(page < maxPage){
             dispatch(setPage(page + 1))
-        }
-    }
-    const addPageForLike = () => {
-        if(page < maxPage){
-            setCurrentPageOfLike(currentPageOfLike + 1)
         }
     }
     const showItems = (item: CharacterModel) : any => {
@@ -80,15 +58,9 @@ const Characters = () => {
                     ) : (character && character.map((item: CharacterModel) => showItems(item)))
             }
             {(!detailsId && character && maxPage > page) &&(
-                likedCharacters ? (
-                    <div className={s.next__button}>
-                        <Button onClick={addPageForLike} variant="contained">NextT</Button>
-                    </div>
-                    ) : (
-                    <div className={s.next__button}>
-                        <Button onClick={addPage} variant="contained">Next</Button>
-                    </div>
-                    )
+                <div className={s.next__button}>
+                    <Button onClick={addPage} variant="contained">Next</Button>
+                </div>
             )}
       </div>
     );

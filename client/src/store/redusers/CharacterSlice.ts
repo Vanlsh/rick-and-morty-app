@@ -10,6 +10,7 @@ interface CharacterState {
     isError: boolean
     name: string
     likedCharacters: boolean
+    status: boolean
 }
 interface ILike {
     id: number
@@ -23,20 +24,17 @@ const initialState: CharacterState = {
     maxPage: 2,
     isError: false,
     name: '',
-    likedCharacters: false
+    likedCharacters: false,
+    status: false
 }
 export const characterSlice = createSlice({
     name: 'character',
     initialState,
     reducers: {
         addCharacter(state, action: PayloadAction<CharacterModel[]>){
-            console.log("addCharacter")
-            console.log(state.page)
             state.character = [...state.character, ...action.payload]
         },
         setCharacter(state, action: PayloadAction<CharacterModel[]>){
-            console.log("setCharacter")
-            console.log(state.page)
             state.character = action.payload
         },
         setDetailsId(state, action: PayloadAction<number | null>) {
@@ -50,7 +48,6 @@ export const characterSlice = createSlice({
             })
         },
         setPage(state, action: PayloadAction<number>){
-            console.log()
             state.page = action.payload
         },
         refreshCharacter(state){
@@ -67,7 +64,10 @@ export const characterSlice = createSlice({
         },
         setLikePageStatus(state, action: PayloadAction<boolean>){
             state.likedCharacters = action.payload
-        }
+        },
+        setStatus(state, action: PayloadAction<boolean>){
+            state.status = action.payload
+        },
     }
 })
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Button, TextField} from "@mui/material";
 import s from './Search.module.scss'
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
@@ -6,9 +6,7 @@ import {characterSlice} from "../../store/redusers/CharacterSlice";
 import {characterAPI} from "../../services/CharacterService";
 import {CharacterHelper} from "../../services/CharacterHelper";
 
-
 const SearchComponent = () => {
-    const [status, setStatus] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const {addCharacter,
         setPage,
@@ -16,22 +14,28 @@ const SearchComponent = () => {
         setError,setMaxPage,
         setName,
         setLikePageStatus,
-        setCharacter
+        setCharacter,
+        setStatus
     } = characterSlice.actions
-    const {page, character,name, likedCharacters} = useAppSelector(state => state.characterReducer)
+    const {page, character,name, likedCharacters, status} = useAppSelector(state => state.characterReducer)
     const {data: characters, isError} = characterAPI.useFilterByNameQuery({name,page})
     useEffect(() => {
         dispatch(setError(isError))
         if(characters) {
-            const characterArray = CharacterHelper.getCharacter(characters,character)
-            if(!characterArray) return
-            dispatch(addCharacter(characterArray))
-            dispatch(setMaxPage(characters.info.pages))}
-        },[characters, isError])
+            const characterArray = CharacterHelper.getCharacter(characters)
+            const duplicateChecking = CharacterHelper.checkCharacter(characters.results[0].id, character)
+            if (duplicateChecking) {
+                dispatch(setCharacter(characterArray))
+            } else {
+                dispatch(addCharacter(characterArray))
+            }
+            dispatch(setMaxPage(characters.info.pages))
+        }
+    },[characters, isError])
 
     const showAll = () => {
         if(likedCharacters){
-            setStatus(false)
+            dispatch(setStatus(false))
             dispatch(setLikePageStatus(false))
             dispatch(setName(''))
             dispatch(setPage(1))
@@ -40,7 +44,7 @@ const SearchComponent = () => {
     }
     const showLiked = () => {
         if(!likedCharacters){
-            setStatus(true)
+            dispatch(setStatus(true))
             dispatch(setLikePageStatus(true))
             dispatch(setName(''))
             dispatch(setPage(1))

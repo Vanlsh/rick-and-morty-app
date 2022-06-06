@@ -6,29 +6,15 @@ import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {characterSlice} from "../../store/redusers/CharacterSlice";
 import {CharacterModel} from "../../services/Character";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import {CharacterHelper} from "../../services/CharacterHelper";
 
 interface Props {
     character: CharacterModel
 }
 
-const getStorageLike = (id: number) : boolean=> {
-    const storageLike: string | null  = localStorage.getItem(`character${id}`)
-    if(storageLike){
-        return JSON.parse(storageLike)
-    } else {
-        return false
-    }
-}
-
 const Character = ({character}:Props) => {
-    const storageLike: string | null  = localStorage.getItem(`character${character.id}`)
-    let likedItemState : boolean
-    if(storageLike){
-        likedItemState = JSON.parse(storageLike)
-    } else {
-        likedItemState = false
-    }
-    const [likeStatus, setLikeStatus] = useLocalStorage<boolean>(`character${character.id}`,likedItemState)
+    const likedItemState = CharacterHelper.getStorageLikeStatus(character.id)
+    const [likeStatus, setLikeStatus] = useLocalStorage<boolean>(`character_${character.id}`,likedItemState)
     const dispatch = useAppDispatch()
     const {setDetailsId,setLike} = characterSlice.actions
     useEffect(() => {
@@ -59,7 +45,6 @@ const Character = ({character}:Props) => {
     );
     return (
         <div className={s.item} onClick={() => dispatch(setDetailsId(character.id))}>
-            <div>{character.id}</div>
             <Card variant="outlined">{card}</Card>
         </div>
     );
