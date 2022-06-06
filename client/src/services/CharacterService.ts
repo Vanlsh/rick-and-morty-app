@@ -44,6 +44,11 @@ export const characterAPI = createApi({
                 url: `/character/?name=${name}&page=${page}`,
             })
         }),
+        filter:  build.query<any,number []>({
+            query: (liked) => ({
+                url: `/character/${liked}`,
+            })
+        }),
         fetchLocation:  build.query<any,number>({
             query: (id) => ({
                 url: `/location/${id}`,

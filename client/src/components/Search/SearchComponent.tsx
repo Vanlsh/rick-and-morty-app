@@ -6,13 +6,20 @@ import {characterSlice} from "../../store/redusers/CharacterSlice";
 import {characterAPI} from "../../services/CharacterService";
 import {CharacterHelper} from "../../services/CharacterHelper";
 
+
 const SearchComponent = () => {
     const [status, setStatus] = useState<boolean>(false)
     const dispatch = useAppDispatch()
-    const {addCharacter, setPage, refreshCharacter, setError,setMaxPage,setName} = characterSlice.actions
-    const {page, character,name} = useAppSelector(state => state.characterReducer)
+    const {addCharacter,
+        setPage,
+        refreshCharacter,
+        setError,setMaxPage,
+        setName,
+        setLikePageStatus,
+        setCharacter
+    } = characterSlice.actions
+    const {page, character,name, likedCharacters} = useAppSelector(state => state.characterReducer)
     const {data: characters, isError} = characterAPI.useFilterByNameQuery({name,page})
-
     useEffect(() => {
         dispatch(setError(isError))
         if(characters) {
@@ -22,13 +29,24 @@ const SearchComponent = () => {
             dispatch(setMaxPage(characters.info.pages))}
         },[characters, isError])
 
-    const filterItem = () => {
-        if(status){
+    const showAll = () => {
+        if(likedCharacters){
             setStatus(false)
-        } else {
+            dispatch(setLikePageStatus(false))
+            dispatch(setName(''))
+            dispatch(setPage(1))
+        }
+
+    }
+    const showLiked = () => {
+        if(!likedCharacters){
             setStatus(true)
+            dispatch(setLikePageStatus(true))
+            dispatch(setName(''))
+            dispatch(setPage(1))
         }
     }
+
     const filterCharacter = (value:any) => {
         dispatch(refreshCharacter())
         dispatch(setPage(1))
@@ -37,8 +55,8 @@ const SearchComponent = () => {
     return (
         <div className={s.wrapper}>
             <div className={s.wrapper__like}>
-                <Button variant={status ? "contained" : "outlined"} onClick={() => dispatch(setPage(page + 1))}>Show liked</Button>
-                <Button variant={status ? "outlined" : "contained"} onClick={filterItem}>Show all</Button>
+                <Button variant={status ? "contained" : "outlined"} onClick={showLiked}>Show liked</Button>
+                <Button variant={status ? "outlined" : "contained"} onClick={showAll}>Show all</Button>
             </div>
             <div className={s.wrapper__find}>
                 <TextField

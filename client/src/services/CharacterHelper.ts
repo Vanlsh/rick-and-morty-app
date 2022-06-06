@@ -13,7 +13,7 @@ export class CharacterHelper{
         if(!!characterInState.length){
             const check = CharacterHelper.check(characters.results[0].id,characterInState)
             if(check) {
-                return
+                return false
             }
         }
         for(let i = 0; i < characters.results.length; i++) {
@@ -33,6 +33,23 @@ export class CharacterHelper{
             }
         }
         return false
-
+    }
+    static checkCharacter(characters: any, characterInState: any){
+        if(!!characterInState.length){
+            for (let i = 0;i < characterInState.length; i++){
+                if(characters.results[0].id === characterInState[i].id) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    static getStorageLikeStatus(id: number): boolean {
+        const storageLike: string | null  = localStorage.getItem(`character${id}`)
+        if(storageLike){
+            return JSON.parse(storageLike)
+        } else {
+            return false
+        }
     }
 }

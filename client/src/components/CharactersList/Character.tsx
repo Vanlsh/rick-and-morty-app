@@ -1,24 +1,46 @@
 import {Card} from '@mui/material';
-import React from 'react';
+import React, {useEffect} from 'react';
 import s from './Characters.module.scss'
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {characterSlice} from "../../store/redusers/CharacterSlice";
 import {CharacterModel} from "../../services/Character";
-import {Link} from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 interface Props {
     character: CharacterModel
 }
+
+const getStorageLike = (id: number) : boolean=> {
+    const storageLike: string | null  = localStorage.getItem(`character${id}`)
+    if(storageLike){
+        return JSON.parse(storageLike)
+    } else {
+        return false
+    }
+}
+
 const Character = ({character}:Props) => {
+    const storageLike: string | null  = localStorage.getItem(`character${character.id}`)
+    let likedItemState : boolean
+    if(storageLike){
+        likedItemState = JSON.parse(storageLike)
+    } else {
+        likedItemState = false
+    }
+    const [likeStatus, setLikeStatus] = useLocalStorage<boolean>(`character${character.id}`,likedItemState)
     const dispatch = useAppDispatch()
-    const {setDetailsId,setLike,setName} = characterSlice.actions
-    const user = false
+    const {setDetailsId,setLike} = characterSlice.actions
+    useEffect(() => {
+        const id = character.id
+        const status = likeStatus
+        dispatch(setLike({id,status}))
+    },[likeStatus])
     const clickLike = (e:any, id: number) => {
         e.stopPropagation()
-        if(user){
-            dispatch(setLike(id))
-        }
+        const status = !likeStatus
+        dispatch(setLike({id,status}))
+        setLikeStatus(status)
     }
     const card = (
         <div className={s.wrapper}>
@@ -27,24 +49,11 @@ const Character = ({character}:Props) => {
                 <div className={s.status}>{character.status}</div>
             </div>
             <div className={s.wrapper__buttons}>
-                {
-                    user ?(
-                            <div className={character.like ? s.liked : s.unliked}
-                                 onClick={(e:any) => clickLike(e, character.id) }
-                            >
-                                <FavoriteIcon />
-                            </div>
-                        )
-                        :(
-                            <Link to={'/login'} >
-                                <div className={s.unliked}
-                                     onClick={(e) => e.stopPropagation()}>
-                                    <FavoriteIcon />
-                                </div>
-                            </Link>
-                        )
-                }
-
+                <div className={likeStatus ? s.liked : s.unliked}
+                     onClick={(e:any) => clickLike(e, character.id) }
+                >
+                    <FavoriteIcon />
+                </div>
             </div>
         </div>
     );
